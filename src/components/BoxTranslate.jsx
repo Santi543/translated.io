@@ -5,17 +5,18 @@ import sound from '../imgs/sound_max_fill.svg'
 import copy from '../imgs/Copy.svg'
 import alfa from '../imgs/Sort_alfa.svg'
 import down from '../imgs/Expand_down.svg'
+import change from '../imgs/Horizontal_top_left_main.svg'
 
 const Container = styled(Box)`
     display: flex;
     flex-direction: column;
-    background-color: #212936cc;
     border-radius: 20px;
     border: 1px solid #4D5562;
-    opacity: 0.97;
+    opacity: 0.9;
     width: 500px;
     height: 270px;
     padding: 15px 20px 15px 20px;
+    background-color: ${props => props.output ? '#121826cc' : '#212936cc'};
 `
 
 const BoxLanguages = styled(Box)`
@@ -97,29 +98,45 @@ const CharactersCounter = styled(Box)`
     justify-content: flex-end;
     color: #4D5562;
     font-size: 12px;
-    font-weight: bold;
     font-family: 'DM Sans', sans-serif;
     margin-bottom: 10px;
 `
 
-const BoxTranslate = () => {
+const BoxTranslate = ({ output }) => {
     const [counter, setCounter] = useState(19)
+    const [outLanguage, setOutLanguage] = useState("French")
     const [language, setLanguage] = useState("English")
     const languagesArray = [{ lang: "Detect Language" }, { lang: "English" }, { lang: "French" }, { lang: "Spanish" }]
+    
+    
     const turnOn = (lang) => {
         setLanguage(lang)
     }
     return (
-        <Container>
-            <BoxLanguages>
-                {languagesArray.map((obj) => {
-                    return (
-                        <Languages className={language === obj.lang ? 'on' : ''} onClick={() => turnOn(obj.lang)}>{obj.lang}</Languages>
-                    )
-                })}
-            </BoxLanguages>
-            <TextArea onChange={(e) => setCounter(e.target.value.length)} disabled={false} minLength={0} maxLength={500}>Hello, how are you?</TextArea>
-                <CharactersCounter>{counter}/500</CharactersCounter>
+        <Container output={output}>
+            {output ?
+                <BoxLanguages>
+                        {languagesArray.map((obj) => {
+                            return (
+                                <Languages className={language === obj.lang ? 'on' : ''} onClick={() => turnOn(obj.lang)}>{obj.lang}</Languages>
+                            )
+                        })}
+                        <BoxIcon>
+                            <img src={change} />
+                        </BoxIcon>
+
+                </BoxLanguages>
+
+                : <BoxLanguages>
+                    {languagesArray.map((obj) => {
+                        return (
+                            <Languages className={language === obj.lang ? 'on' : ''} onClick={() => turnOn(obj.lang)}>{obj.lang}</Languages>
+                        )
+                    })}
+                </BoxLanguages>}
+
+            <TextArea readOnly={output ? true : false} defaultValue={"Hello, how are you?"} onChange={(e) => setCounter(e.target.value.length)} disabled={false} minLength={0} maxLength={500}></TextArea>
+            {output ? false : <CharactersCounter>{counter}/500</CharactersCounter>}
             <BoxRowBottom>
                 <BoxIcons>
                     <BoxIcon>
@@ -129,9 +146,10 @@ const BoxTranslate = () => {
                         <img src={copy} />
                     </BoxIcon>
                 </BoxIcons>
-                <Translate>
+                {output ? false : <Translate>
                     <img src={alfa} />Translate
-                </Translate>
+                </Translate>}
+
             </BoxRowBottom>
         </Container>
     )
