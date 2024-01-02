@@ -1,11 +1,13 @@
 import styled from '@emotion/styled'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Box } from '@mui/material'
 import sound from '../imgs/sound_max_fill.svg'
 import copy from '../imgs/Copy.svg'
 import alfa from '../imgs/Sort_alfa.svg'
 import down from '../imgs/Expand_down.svg'
 import change from '../imgs/Horizontal_top_left_main.svg'
+import data from '../data/translateApi'
+import countries from '../data/countries'
 
 const Container = styled(Box)`
     display: flex;
@@ -25,8 +27,9 @@ const BoxLanguages = styled(Box)`
     border-bottom: 1px solid #394150;
     padding: 0 5px 12px 5px;
     gap: 15px;
-    justify-content: flex-start;
+    justify-content: ${props => props.output ? 'space-between' : 'flex-start'};
     align-items: center;
+
 `
 
 const Languages = styled(Box)`
@@ -91,6 +94,7 @@ const BoxRowBottom = styled(Box)`
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
+    height: 42px;
 `
 
 const CharactersCounter = styled(Box)`
@@ -102,29 +106,55 @@ const CharactersCounter = styled(Box)`
     margin-bottom: 10px;
 `
 
-const BoxTranslate = ({ output }) => {
+const SubBoxOutput = styled(Box)`
+    display: flex;
+    flex-direction: row;
+    gap: 15px;
+`
+
+
+
+const BoxTranslate = ({ output = +false }) => {
+    console.log(output)
+    
     const [counter, setCounter] = useState(19)
+    const [arrayOut, setArrayOut] = useState([])
     const [outLanguage, setOutLanguage] = useState("French")
     const [language, setLanguage] = useState("English")
     const languagesArray = [{ lang: "Detect Language" }, { lang: "English" }, { lang: "French" }, { lang: "Spanish" }]
+    const outputArray = languagesArray.filter((obj) => obj.lang !== "Detect Language")
+    const apiUrl = 'https://api.mymemory.translated.net/get?q=Hello World!&langpair=en|it'
     
+    /* for (let index = 0; index < countries.length; index++) {
+        console.log(countries)
+        
+    } */
+
     
+    for (const [key, value] of Object.entries(countries)) {
+        console.log(`${key}: ${value}`);
+      }
+
+
     const turnOn = (lang) => {
         setLanguage(lang)
     }
     return (
         <Container output={output}>
             {output ?
-                <BoxLanguages>
-                        {languagesArray.map((obj) => {
-                            return (
-                                <Languages className={language === obj.lang ? 'on' : ''} onClick={() => turnOn(obj.lang)}>{obj.lang}</Languages>
-                            )
-                        })}
-                        <BoxIcon>
-                            <img src={change} />
-                        </BoxIcon>
-
+                <BoxLanguages output={output}>
+                        <SubBoxOutput>
+                            {outputArray.map((obj) => {
+                                return (
+                                    <Languages className={language === obj.lang ? 'on' : ''} onClick={() => turnOn(obj.lang)}>{obj.lang}</Languages>
+                                )
+                            })}
+                        </SubBoxOutput>
+                        <Box>
+                            <BoxIcon>
+                                <img src={change} />
+                            </BoxIcon>
+                        </Box>
                 </BoxLanguages>
 
                 : <BoxLanguages>

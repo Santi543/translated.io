@@ -15,7 +15,7 @@ const BoxContainer = () => {
   return (
     <Container>
         <BoxTranslate/>
-        <BoxTranslate output={true}/>
+        <BoxTranslate output={+true}/>
     </Container>
   )
 }
