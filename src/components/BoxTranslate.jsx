@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 import React, { useEffect, useState } from 'react'
-import { Box } from '@mui/material'
+import { Box, Typography } from '@mui/material'
 import sound from '../imgs/sound_max_fill.svg'
 import copy from '../imgs/Copy.svg'
 import alfa from '../imgs/Sort_alfa.svg'
@@ -112,30 +112,73 @@ const SubBoxOutput = styled(Box)`
     gap: 15px;
 `
 
+const BoxSelectLanguages = styled(Box)`
+    display: flex;
+    display: ${props => props.hide ? "none" : "flex"};
+    flex-direction: column;
+    overflow-y: scroll;
+    height: 100px;
+    position: absolute;
+    z-index: 100;
+    left: -4px;
+    bottom: 54px;
+    background-color: #121826cc;
+    color: #4D5562;
+    width: 100px;
+    gap: 3px;
+    padding-top: 10px;
+    border-radius: 10px;
+    border: 1px solid #4D5562;
+    &::-webkit-scrollbar{
+        width: 7px;
+        background: transparent;
+    }
+    &::-webkit-scrollbar-thumb{
+        background: #4D5562;
+        border-radius: 5px;
+    }
+    
+`
 
+const CountriesLang = styled(Typography)`
+    &:hover{
+        background-color: #F9FAFB;
+        color: #040711;
+        cursor: pointer;
+    }
+`
 
 const BoxTranslate = ({ output = +false }) => {
-    console.log(output)
-    
+    const [langPairOut, setLangpairOut] = useState("")
+    const [langPairIn, setLangpairIn] = useState("")
+    const [display, setDisplay] = useState(false)
     const [counter, setCounter] = useState(19)
-    const [arrayOut, setArrayOut] = useState([])
+    const [text, setText] = useState("Hello, how are you?")
     const [outLanguage, setOutLanguage] = useState("French")
     const [language, setLanguage] = useState("English")
-    const languagesArray = [{ lang: "Detect Language" }, { lang: "English" }, { lang: "French" }, { lang: "Spanish" }]
-    const outputArray = languagesArray.filter((obj) => obj.lang !== "Detect Language")
-    const apiUrl = 'https://api.mymemory.translated.net/get?q=Hello World!&langpair=en|it'
+
+    const apiUrl = `https://api.mymemory.translated.net/get?q=${text}&langpair=${langPairIn}|${langPairOut}`
+
+    const onChangeText = (evt) =>{
+        setCounter(evt.target.value.length)
+        setText(evt.target.value)
+    }
+
+    const filterLanguageOut = (language) =>{
+        for (const [key, value] of Object.entries(countries)){
+            if(language === value){
+                setLangpairOut(key)
+            }
+        }
+    }
+    const filterLanguageIn = (language) =>{
+        for (const [key, value] of Object.entries(countries)){
+            if(language === value){
+                setLangpairIn(key)
+            }
+        }
+    }
     
-    /* for (let index = 0; index < countries.length; index++) {
-        console.log(countries)
-        
-    } */
-
-    
-    for (const [key, value] of Object.entries(countries)) {
-        console.log(`${key}: ${value}`);
-      }
-
-
     const turnOn = (lang) => {
         setLanguage(lang)
     }
@@ -143,29 +186,51 @@ const BoxTranslate = ({ output = +false }) => {
         <Container output={output}>
             {output ?
                 <BoxLanguages output={output}>
-                        <SubBoxOutput>
-                            {outputArray.map((obj) => {
-                                return (
-                                    <Languages className={language === obj.lang ? 'on' : ''} onClick={() => turnOn(obj.lang)}>{obj.lang}</Languages>
-                                )
-                            })}
-                        </SubBoxOutput>
-                        <Box>
-                            <BoxIcon>
-                                <img src={change} />
-                            </BoxIcon>
+                    <SubBoxOutput>
+                        <Languages className={language === 'English' ? 'on' : ''} onClick={() => turnOn('English')}>English</Languages>
+                        <Languages className={language === 'French' ? 'on' : ''} onClick={() => turnOn('French')}>French</Languages>
+                        <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', position: 'relative' }}>
+                            <Languages className={language === 'Spanish' ? 'on' : ''} onClick={() => turnOn('Spanish')}>Spanish</Languages>
+                            <img src={down} style={{cursor: 'pointer'}} onClick={() => setDisplay(!display)} />
+                            <BoxSelectLanguages hide={!display}>
+                                {display ? Object.values(countries).map((obj) => {
+                                    return (
+                                        <CountriesLang onClick={(evt) => filterLanguageOut(evt.target.innerHTML)}>{obj}</CountriesLang>
+                                    )
+
+                                })
+                                    : false}
+                            </BoxSelectLanguages>
                         </Box>
+
+                    </SubBoxOutput>
+                    <Box>
+                        <BoxIcon>
+                            <img src={change} />
+                        </BoxIcon>
+                    </Box>
                 </BoxLanguages>
 
                 : <BoxLanguages>
-                    {languagesArray.map((obj) => {
-                        return (
-                            <Languages className={language === obj.lang ? 'on' : ''} onClick={() => turnOn(obj.lang)}>{obj.lang}</Languages>
-                        )
-                    })}
+                    <Languages className={language === 'Detect Languages' ? 'on' : ''} onClick={() => turnOn('Detect Languages')}>Detect Languages</Languages>
+                    <Languages className={language === 'English' ? 'on' : ''} onClick={() => turnOn('English')}>English</Languages>
+                    <Languages className={language === 'French' ? 'on' : ''} onClick={() => turnOn('French')}>French</Languages>
+                    <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center',position: 'relative'  }}>
+                        <Languages className={language === 'Spanish' ? 'on' : ''} onClick={() => turnOn('Spanish')}>Spanish</Languages>
+                        <img src={down} style={{cursor: 'pointer'}} onClick={() => setDisplay(!display)} />
+                            <BoxSelectLanguages hide={!display}>
+                                {display ? Object.values(countries).map((obj) => {
+                                    return (
+                                        <CountriesLang onClick={(evt) => filterLanguageIn(evt.target.innerHTML)}>{obj}</CountriesLang>
+                                    )
+
+                                })
+                                    : false}
+                            </BoxSelectLanguages>
+                    </Box>
                 </BoxLanguages>}
 
-            <TextArea readOnly={output ? true : false} defaultValue={"Hello, how are you?"} onChange={(e) => setCounter(e.target.value.length)} disabled={false} minLength={0} maxLength={500}></TextArea>
+            <TextArea readOnly={output ? true : false} defaultValue={text} onChange={(evt) => onChangeText(evt)} disabled={false} minLength={0} maxLength={500}></TextArea>
             {output ? false : <CharactersCounter>{counter}/500</CharactersCounter>}
             <BoxRowBottom>
                 <BoxIcons>
