@@ -2,7 +2,6 @@ import './App.css';
 import styled from '@emotion/styled'
 import hero from '../src/imgs/hero_img.jpg'
 import logo from '../src/imgs/logo.svg'
-import BoxTranslate from './components/BoxTranslate';
 import BoxContainer from './components/BoxContainer';
 
 const BackgroundImage = styled.img`
