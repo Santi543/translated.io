@@ -36,19 +36,34 @@ const BoxContainer = () => {
   }
 
   const changePlaceLanguages = () => {
-    setOutLanguage(language);
-    setLanguage(outLanguage);
+    if ((outLanguage !== "French" && outLanguage !== "English" && outLanguage !== "Spanish") && (language !== "Spanish" && language !== "French" && language !== "English" )) {
+      setLanguageSelect(languageSelectInput)
+      setLanguageSelectInput(languageSelect)
+      setLanguage(outLanguage)
+      setOutLanguage(language)
+    } else if((outLanguage !== "French" && outLanguage !== "English" && outLanguage !== "Spanish") && (language === "Spanish" || language === "French" || language === "English" )){
+      setLanguage(outLanguage)
+      setLanguageSelectInput(outLanguage)
+      setOutLanguage(language)
+    } else if((outLanguage === "French" || outLanguage === "English" || outLanguage === "Spanish") && (language === "Spanish" || language === "French" || language === "English")){
+      setOutLanguage(language);
+      setLanguage(outLanguage);
+    } else if((outLanguage === "French" || outLanguage === "English" || outLanguage === "Spanish") && (language !== "Spanish" && language !== "French" && language !== "English" )){
+      setLanguageSelect(language)
+      setOutLanguage(language)
+      setLanguage(outLanguage)
+    }
   }
 
   const filterLanguageOut = (language) => {
     for (const [key, value] of Object.entries(countries)) {
       if (language === value && language !== "French" && language !== "English") {
-        setLangpairOut(key)
+         setLangpairOut(key)
         setOutLanguage(language)
         setLanguageSelect(language)
         setDisplayOutput(false)
-      } else {
-        setLangpairOut(key)
+      } else if(language === value){
+         setLangpairOut(key)
         setOutLanguage(language)
         setDisplayOutput(false)
       }
@@ -58,28 +73,29 @@ const BoxContainer = () => {
   const filterLanguageIn = (language) => {
     for (const [key, value] of Object.entries(countries)) {
       if (language === value && language !== "French" && language !== "English") {
-        setLangpairIn(key)
         setLanguage(language)
         setLanguageSelectInput(language)
         setDisplayInput(false)
-      } else {
         setLangpairIn(key)
+      } else if(language === value){
+         setLangpairIn(key)
         setLanguage(language)
         setDisplayInput(false)
       }
     }
   }
 
-  console.log("in", langPairIn)
+  /* console.log("in", langPairIn)
   console.log("out", langPairOut)
-  console.log(text)
+  console.log(text) */
+  console.log( "in",language)
+  console.log("out",outLanguage)
 
   useEffect(() => {
     for (const [key, value] of Object.entries(countries)) {
       if (outLanguage === value) {
         setLangpairOut(key)
         setOutLanguage(outLanguage)
-        setLangpairIn(key)
       }
     }
     callingApi()

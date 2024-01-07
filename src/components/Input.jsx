@@ -160,7 +160,7 @@ const Input = ({ text, setText, callingApi, language, filterLanguageIn, language
           <BoxSelectLanguages hide={!display}>
             {display ? Object.values(countries).map((obj) => {
               return (
-                <CountriesLang onClick={(evt) => filterLanguageIn(evt.target.innerHTML)}>{obj}</CountriesLang>
+                <CountriesLang onClick={(evt) => {filterLanguageIn(evt.target.innerHTML)}}>{obj}</CountriesLang>
               )
 
             })
@@ -179,7 +179,7 @@ const Input = ({ text, setText, callingApi, language, filterLanguageIn, language
             <img src={copy} />
           </BoxIcon>
         </BoxIcons>
-        <Translate onClick={() => { callingApi() }}>
+        <Translate onClick={() =>  {callingApi()} }>
           <img src={alfa} />Translate
         </Translate>
       </BoxRowBottom>

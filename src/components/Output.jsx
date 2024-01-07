@@ -145,7 +145,7 @@ const Output = ({outLanguage, filterLanguageOut, textOut, changePlaceLanguages, 
 
                     </SubBoxOutput>
                     <Box>
-                        <BoxIcon onClick={() => {changePlaceLanguages()}}>
+                        <BoxIcon onClick={() => changePlaceLanguages()}>
                             <img src={change} />
                         </BoxIcon>
                     </Box>
