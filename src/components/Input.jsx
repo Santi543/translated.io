@@ -140,28 +140,13 @@ const CountriesLang = styled(Typography)`
     }
 `
 
-const Input = ({ text, setText, setLangpairIn, callingApi }) => {
-  const [display, setDisplay] = useState(false)
+const Input = ({ text, setText, callingApi, language, filterLanguageIn, languageSelectInput, display , setDisplay}) => {
   const [counter, setCounter] = useState(19)
-  const [language, setLanguage] = useState("English")
 
   const onChangeText = (evt) => {
     setCounter(evt.target.value.length)
     setText(evt.target.value)
   }
-  const filterLanguageIn = (language) => {
-    for (const [key, value] of Object.entries(countries)) {
-      if (language === value) {
-        setLangpairIn(key)
-        setLanguage(language)
-      }
-    }
-  }
-
-
-  useEffect(() =>{
-    filterLanguageIn(language)
-  }, [])
 
   return (
     <Container >
@@ -170,7 +155,7 @@ const Input = ({ text, setText, setLangpairIn, callingApi }) => {
         <Languages className={language === 'English' ? 'on' : ''} onClick={() => filterLanguageIn('English')}>English</Languages>
         <Languages className={language === 'French' ? 'on' : ''} onClick={() => filterLanguageIn('French')}>French</Languages>
         <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', position: 'relative' }}>
-          <Languages className={language === 'Spanish' ? 'on' : ''} onClick={() => filterLanguageIn('Spanish')}>Spanish</Languages>
+          <Languages className={language === languageSelectInput ? 'on' : ''} onClick={() => filterLanguageIn(languageSelectInput)}>{languageSelectInput}</Languages>
           <img src={down} style={{ cursor: 'pointer' }} onClick={() => setDisplay(!display)} />
           <BoxSelectLanguages hide={!display}>
             {display ? Object.values(countries).map((obj) => {
@@ -194,7 +179,7 @@ const Input = ({ text, setText, setLangpairIn, callingApi }) => {
             <img src={copy} />
           </BoxIcon>
         </BoxIcons>
-        <Translate onClick={callingApi()}>
+        <Translate onClick={() => { callingApi() }}>
           <img src={alfa} />Translate
         </Translate>
       </BoxRowBottom>

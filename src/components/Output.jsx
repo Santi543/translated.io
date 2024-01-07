@@ -69,6 +69,7 @@ const BoxIcon = styled(Box)`
     padding: 3px;
     border-radius: 10px;
     border: 2px solid #4D5562;
+    cursor: pointer;
 `
 
 const BoxRowBottom = styled(Box)`
@@ -120,14 +121,7 @@ const CountriesLang = styled(Typography)`
     }
 `
 
-const Output = ({outLanguage, filterLanguageOut, textOut}) => {
-    const [display, setDisplay] = useState(false)
-    const [text, setText] = useState("Hello, how are you?")
-    /* const apiUrl = `https://api.mymemory.translated.net/get?q=${text}&langpair=${langPairIn}|${langPairOut}` */
-
-    const onChangeText = (evt) => {
-        setText(evt.target.value)
-    }
+const Output = ({outLanguage, filterLanguageOut, textOut, changePlaceLanguages, languageSelect, display, setDisplay }) => {
 
     return (
         <Container>
@@ -136,7 +130,7 @@ const Output = ({outLanguage, filterLanguageOut, textOut}) => {
                         <Languages className={outLanguage === 'English' ? 'on' : ''} onClick={() => filterLanguageOut('English')}>English</Languages>
                         <Languages className={outLanguage === 'French' ? 'on' : ''} onClick={() => filterLanguageOut('French')}>French</Languages>
                         <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', position: 'relative' }}>
-                            <Languages className={outLanguage === 'Spanish' ? 'on' : ''} onClick={() => filterLanguageOut('Spanish')}>Spanish</Languages>
+                            <Languages className={outLanguage === languageSelect ? 'on' : ''} onClick={() => filterLanguageOut(languageSelect)}>{languageSelect}</Languages>
                             <img src={down} style={{ cursor: 'pointer' }} onClick={() => setDisplay(!display)} />
                             <BoxSelectLanguages hide={!display}>
                                 {display ? Object.values(countries).map((obj) => {
@@ -151,13 +145,13 @@ const Output = ({outLanguage, filterLanguageOut, textOut}) => {
 
                     </SubBoxOutput>
                     <Box>
-                        <BoxIcon>
+                        <BoxIcon onClick={() => {changePlaceLanguages()}}>
                             <img src={change} />
                         </BoxIcon>
                     </Box>
                 </BoxLanguages>
 
-            <TextArea readOnly={true} value={textOut} onChange={(evt) => onChangeText(evt)} disabled={false} minLength={0} maxLength={500}></TextArea>
+            <TextArea readOnly={true} value={textOut}  disabled={false} minLength={0} maxLength={500}></TextArea>
 
             <BoxRowBottom>
                 <BoxIcons>
