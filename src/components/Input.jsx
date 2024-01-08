@@ -6,6 +6,7 @@ import copy from '../imgs/Copy.svg'
 import alfa from '../imgs/Sort_alfa.svg'
 import down from '../imgs/Expand_down.svg'
 import countries from '../data/countries'
+import { ToastContainer } from 'react-toast'
 
 const Container = styled(Box)`
     display: flex;
@@ -69,6 +70,7 @@ const BoxIcon = styled(Box)`
     padding: 3px;
     border-radius: 10px;
     border: 2px solid #4D5562;
+    cursor: pointer;
 `
 
 const Translate = styled(Box)`
@@ -140,7 +142,20 @@ const CountriesLang = styled(Typography)`
     }
 `
 
-const Input = ({ text, setText, callingApi, language, filterLanguageIn, languageSelectInput, display , setDisplay}) => {
+const DetectedLanguage = styled(Box)`
+  display: flex;
+  visibility: ${props => props.languageDetected ? "visible" : "hidden"};
+  background-color: transparent;
+  text-align: center;
+  color: #CDD5E0;
+  border: 2px solid #4D5562;
+  padding: 4px;
+  border-radius: 7px;
+  font-size: 12px;
+  margin-left: 8px;
+`
+
+const Input = ({ text, setText, languageDetected, setLanguage, callingApi, language, filterLanguageIn, languageSelectInput, display, setDisplay, copyText, letsTalk }) => {
   const [counter, setCounter] = useState(19)
 
   const onChangeText = (evt) => {
@@ -151,7 +166,7 @@ const Input = ({ text, setText, callingApi, language, filterLanguageIn, language
   return (
     <Container >
       <BoxLanguages>
-        <Languages className={language === 'Detect Languages' ? 'on' : ''} onClick={() => filterLanguageIn('Detect Languages')}>Detect Languages</Languages>
+        <Languages className={language === 'Detect Languages' ? 'on' : ''} onClick={() => setLanguage('Detect Languages')}>Detect Languages</Languages>
         <Languages className={language === 'English' ? 'on' : ''} onClick={() => filterLanguageIn('English')}>English</Languages>
         <Languages className={language === 'French' ? 'on' : ''} onClick={() => filterLanguageIn('French')}>French</Languages>
         <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', position: 'relative' }}>
@@ -160,7 +175,7 @@ const Input = ({ text, setText, callingApi, language, filterLanguageIn, language
           <BoxSelectLanguages hide={!display}>
             {display ? Object.values(countries).map((obj) => {
               return (
-                <CountriesLang onClick={(evt) => {filterLanguageIn(evt.target.innerHTML)}}>{obj}</CountriesLang>
+                <CountriesLang onClick={(evt) => { filterLanguageIn(evt.target.innerHTML) }}>{obj}</CountriesLang>
               )
 
             })
@@ -169,20 +184,25 @@ const Input = ({ text, setText, callingApi, language, filterLanguageIn, language
         </Box>
       </BoxLanguages>
       <TextArea defaultValue={text} onChange={(evt) => onChangeText(evt)} disabled={false} minLength={0} maxLength={500}></TextArea>
-      <CharactersCounter>{counter}/500</CharactersCounter>
+      <BoxRowBottom>
+        
+        <DetectedLanguage languageDetected={languageDetected}>Language: {languageDetected}</DetectedLanguage>
+        <CharactersCounter>{counter}/500</CharactersCounter>
+      </BoxRowBottom>
       <BoxRowBottom>
         <BoxIcons>
-          <BoxIcon>
+          <BoxIcon onClick={() => letsTalk(text)}>
             <img src={sound} />
           </BoxIcon>
-          <BoxIcon>
+          <BoxIcon onClick={() => copyText(text)}>
             <img src={copy} />
           </BoxIcon>
         </BoxIcons>
-        <Translate onClick={() =>  {callingApi()} }>
+        <Translate onClick={() => { callingApi() }}>
           <img src={alfa} />Translate
         </Translate>
       </BoxRowBottom>
+      <ToastContainer position='bottom-right' delay={3000} />
     </Container>
   )
 }

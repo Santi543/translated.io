@@ -5,6 +5,7 @@ import Input from './Input'
 import Output from './Output'
 import { useState } from 'react';
 import countries from '../data/countries';
+import { toast } from 'react-toast'
 
 const Container = styled(Box)`
     display: flex;
@@ -25,45 +26,88 @@ const BoxContainer = () => {
   const [displayInput, setDisplayInput] = useState(false)
   const [displayOutput, setDisplayOutput] = useState(false)
   const [languageSelectInput, setLanguageSelectInput] = useState("Spanish")
+  const [languageDetected, setlanguageDetected] = useState("")
+  const [showDetectedLanguage, setShowDetectedLanguage] = useState(false)
+
+  const letsTalk = (text) => {
+    let utterance = new SpeechSynthesisUtterance(text)
+    speechSynthesis.speak(utterance)
+  }
+
+  const copyText = (text) => {
+    var aux = document.createElement('input')
+    aux.setAttribute('value', text)
+    document.body.appendChild(aux)
+    aux.select()
+    document.execCommand('copy')
+    document.body.removeChild(aux)
+    toast("Copied to clipboard")
+  }
 
   const callingApi = () => {
-    if (text.length === 0) {
+     if (text.length === 0) {
       setTextOut("")
+    }
+    if(language === outLanguage){
+      setTextOut(text)
+    }
+    else if (language === "Detect Languages") {
+      fetch(`https://api.mymemory.translated.net/get?q=${text}&langpair=Autodetect|${langPairOut}`)
+        .then((res) => res.json())
+        .then((res) => {
+          for (const [key, value] of Object.entries(countries)) {
+            if (res.responseData.detectedLanguage === key.slice(0,2)) {
+              setlanguageDetected(value)
+              setTextOut(res.responseData.translatedText)
+            }
+          }
+        });
+        setShowDetectedLanguage(true)
     } else {
       const apiUrl = `https://api.mymemory.translated.net/get?q=${text}&langpair=${langPairIn}|${langPairOut}`
       fetch(apiUrl).then(res => res.json()).then(data => { setTextOut(data.responseData.translatedText) })
     }
   }
 
+  console.log(language)
+  console.log(languageDetected)
   const changePlaceLanguages = () => {
-    if ((outLanguage !== "French" && outLanguage !== "English" && outLanguage !== "Spanish") && (language !== "Spanish" && language !== "French" && language !== "English" )) {
+     if ((outLanguage !== "French" && outLanguage !== "English" && outLanguage !== "Spanish") && (language !== "Spanish" && language !== "French" && language !== "English")) {
       setLanguageSelect(languageSelectInput)
       setLanguageSelectInput(languageSelect)
       setLanguage(outLanguage)
       setOutLanguage(language)
-    } else if((outLanguage !== "French" && outLanguage !== "English" && outLanguage !== "Spanish") && (language === "Spanish" || language === "French" || language === "English" )){
+      setLangpairIn(langPairOut)
+      setLangpairOut(langPairIn)
+    } else if ((outLanguage !== "French" && outLanguage !== "English" && outLanguage !== "Spanish") && (language === "Spanish" || language === "French" || language === "English")) {
       setLanguage(outLanguage)
       setLanguageSelectInput(outLanguage)
       setOutLanguage(language)
-    } else if((outLanguage === "French" || outLanguage === "English" || outLanguage === "Spanish") && (language === "Spanish" || language === "French" || language === "English")){
+      setLangpairIn(langPairOut)
+      setLangpairOut(langPairIn)
+    } else if ((outLanguage === "French" || outLanguage === "English" || outLanguage === "Spanish") && (language === "Spanish" || language === "French" || language === "English")) {
       setOutLanguage(language);
       setLanguage(outLanguage);
-    } else if((outLanguage === "French" || outLanguage === "English" || outLanguage === "Spanish") && (language !== "Spanish" && language !== "French" && language !== "English" )){
+      setLangpairIn(langPairOut)
+      setLangpairOut(langPairIn)
+    } else if ((outLanguage === "French" || outLanguage === "English" || outLanguage === "Spanish") && (language !== "Spanish" && language !== "French" && language !== "English")) {
       setLanguageSelect(language)
       setOutLanguage(language)
       setLanguage(outLanguage)
+      setLangpairIn(langPairOut)
+      setLangpairOut(langPairIn)
     }
   }
 
   const filterLanguageOut = (language) => {
     for (const [key, value] of Object.entries(countries)) {
       if (language === value && language !== "French" && language !== "English") {
-         setLangpairOut(key)
+        setLangpairOut(key)
         setOutLanguage(language)
         setLanguageSelect(language)
         setDisplayOutput(false)
-      } else if(language === value){
-         setLangpairOut(key)
+      } else if (language === value) {
+        setLangpairOut(key)
         setOutLanguage(language)
         setDisplayOutput(false)
       }
@@ -77,19 +121,13 @@ const BoxContainer = () => {
         setLanguageSelectInput(language)
         setDisplayInput(false)
         setLangpairIn(key)
-      } else if(language === value){
-         setLangpairIn(key)
+      } else if (language === value) {
+        setLangpairIn(key)
         setLanguage(language)
         setDisplayInput(false)
       }
     }
   }
-
-  /* console.log("in", langPairIn)
-  console.log("out", langPairOut)
-  console.log(text) */
-  console.log( "in",language)
-  console.log("out",outLanguage)
 
   useEffect(() => {
     for (const [key, value] of Object.entries(countries)) {
@@ -114,6 +152,10 @@ const BoxContainer = () => {
         languageSelectInput={languageSelectInput}
         display={displayInput}
         setDisplay={setDisplayInput}
+        copyText={copyText}
+        letsTalk={letsTalk}
+        languageDetected={languageDetected}
+        showDetectedLanguage={showDetectedLanguage}
       />
       <Output
         filterLanguageOut={filterLanguageOut}
@@ -123,7 +165,10 @@ const BoxContainer = () => {
         languageSelect={languageSelect}
         setLanguageSelect={setLanguageSelect}
         display={displayOutput}
-        setDisplay={setDisplayOutput} />
+        setDisplay={setDisplayOutput}
+        copyText={copyText}
+        letsTalk={letsTalk}
+      />
     </Container>
   )
 }

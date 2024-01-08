@@ -121,7 +121,7 @@ const CountriesLang = styled(Typography)`
     }
 `
 
-const Output = ({outLanguage, filterLanguageOut, textOut, changePlaceLanguages, languageSelect, display, setDisplay }) => {
+const Output = ({outLanguage, filterLanguageOut, textOut, changePlaceLanguages, languageSelect, display, setDisplay, copyText, letsTalk }) => {
 
     return (
         <Container>
@@ -155,10 +155,10 @@ const Output = ({outLanguage, filterLanguageOut, textOut, changePlaceLanguages, 
 
             <BoxRowBottom>
                 <BoxIcons>
-                    <BoxIcon>
+                    <BoxIcon onClick={() => letsTalk(textOut)}>
                         <img src={sound} />
                     </BoxIcon>
-                    <BoxIcon>
+                    <BoxIcon onClick={() => copyText(textOut)}>
                         <img src={copy} />
                     </BoxIcon>
                 </BoxIcons>
