@@ -17,13 +17,17 @@ const Container = styled(Box)`
     height: 270px;
     padding: 15px 20px 15px 20px;
     background-color: #121826cc;
+    @media (max-width: 1024px){
+      width: 80%;
+      margin-bottom: 250px;
+    }
 `
 
 const BoxLanguages = styled(Box)`
     display: flex;
     flex-direction: row;
     border-bottom: 1px solid #394150;
-    padding: 0 5px 12px 5px;
+    padding: 5px 5px 15px 5px;
     gap: 15px;
     justify-content: space-between;
     align-items: center;
@@ -33,12 +37,12 @@ const BoxLanguages = styled(Box)`
 const Languages = styled(Box)`
     align-items: center;
     justify-content: center;
-    padding: 10px;
+    padding: 7px 12px 7px 12px;
     color: #4D5562;
     font-family: 'DM Sans', sans-serif;
     font-weight: 500;
     font-size: 14px;
-    border-radius: 12px;
+    border-radius: 10px;
     cursor: pointer;
 `
 

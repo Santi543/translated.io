@@ -18,13 +18,16 @@ const Container = styled(Box)`
     height: 270px;
     padding: 15px 20px 15px 20px;
     background-color:#212936cc;
+    @media (max-width: 1024px){
+      width: 80%;
+    }
 `
 
 const BoxLanguages = styled(Box)`
     display: flex;
     flex-direction: row;
     border-bottom: 1px solid #394150;
-    padding: 0 5px 12px 5px;
+    padding: 5px 5px 15px 5px;;
     gap: 15px;
     justify-content: 'flex-start';
     align-items: center;
@@ -34,12 +37,12 @@ const BoxLanguages = styled(Box)`
 const Languages = styled(Box)`
     align-items: center;
     justify-content: center;
-    padding: 10px;
+    padding: 7px 12px 7px 12px;
     color: #4D5562;
     font-family: 'DM Sans', sans-serif;
     font-weight: 500;
     font-size: 14px;
-    border-radius: 12px;
+    border-radius: 10px;
     cursor: pointer;
 `
 
@@ -144,7 +147,7 @@ const CountriesLang = styled(Typography)`
 
 const DetectedLanguage = styled(Box)`
   display: flex;
-  visibility: ${props => props.languageDetected ? "visible" : "hidden"};
+  visibility: ${props => (props.showdetectedlanguage ? "visible" : "hidden")};
   background-color: transparent;
   text-align: center;
   color: #CDD5E0;
@@ -155,7 +158,7 @@ const DetectedLanguage = styled(Box)`
   margin-left: 8px;
 `
 
-const Input = ({ text, setText, languageDetected, setLanguage, callingApi, language, filterLanguageIn, languageSelectInput, display, setDisplay, copyText, letsTalk }) => {
+const Input = ({ text, setText, showdetectedlanguage, languagedetected, setLanguage, callingApi, language, filterLanguageIn, languageSelectInput, display, setDisplay, copyText, letsTalk }) => {
   const [counter, setCounter] = useState(19)
 
   const onChangeText = (evt) => {
@@ -183,10 +186,10 @@ const Input = ({ text, setText, languageDetected, setLanguage, callingApi, langu
           </BoxSelectLanguages>
         </Box>
       </BoxLanguages>
-      <TextArea defaultValue={text} onChange={(evt) => onChangeText(evt)} disabled={false} minLength={0} maxLength={500}></TextArea>
+      <TextArea value={text} onChange={(evt) => onChangeText(evt)} disabled={false} minLength={0} maxLength={500}></TextArea>
       <BoxRowBottom>
         
-        <DetectedLanguage languageDetected={languageDetected}>Language: {languageDetected}</DetectedLanguage>
+        <DetectedLanguage showdetectedlanguage={showdetectedlanguage} languagedetected={languagedetected}>Language: {languagedetected}</DetectedLanguage>
         <CharactersCounter>{counter}/500</CharactersCounter>
       </BoxRowBottom>
       <BoxRowBottom>

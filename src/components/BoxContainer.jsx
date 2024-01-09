@@ -13,6 +13,9 @@ const Container = styled(Box)`
     align-items: center;
     justify-content: center;
     gap: 20px;
+    @media (max-width: 1024px) {
+      flex-direction: column;
+    }
 `
 
 const BoxContainer = () => {
@@ -20,13 +23,13 @@ const BoxContainer = () => {
   const [langPairOut, setLangpairOut] = useState("fr-FR")
   const [text, setText] = useState("Hello, how are you?")
   const [langPairIn, setLangpairIn] = useState("en-GB")
-  const [textOut, setTextOut] = useState("")
+  const [textOut, setTextOut] = useState("Bonjour, comment allez-vous?")
   const [language, setLanguage] = useState("English")
   const [languageSelect, setLanguageSelect] = useState("Spanish")
   const [displayInput, setDisplayInput] = useState(false)
   const [displayOutput, setDisplayOutput] = useState(false)
   const [languageSelectInput, setLanguageSelectInput] = useState("Spanish")
-  const [languageDetected, setlanguageDetected] = useState("")
+  const [languageDetected, setlanguageDetected] = useState("English")
   const [showDetectedLanguage, setShowDetectedLanguage] = useState(false)
 
   const letsTalk = (text) => {
@@ -68,34 +71,80 @@ const BoxContainer = () => {
       fetch(apiUrl).then(res => res.json()).then(data => { setTextOut(data.responseData.translatedText) })
     }
   }
-
-  console.log(language)
-  console.log(languageDetected)
+  
   const changePlaceLanguages = () => {
-     if ((outLanguage !== "French" && outLanguage !== "English" && outLanguage !== "Spanish") && (language !== "Spanish" && language !== "French" && language !== "English")) {
+    if(language === "Detect Languages" && (languageDetected === "English" || languageDetected === "French" || languageDetected === "Spanish") && (outLanguage === "French" || outLanguage === "English" || outLanguage === "Spanish")){
+      setOutLanguage(languageDetected)
+      setLanguage(outLanguage)
+      setLangpairIn(langPairOut)
+      setLangpairOut(langPairIn)
+      setText(textOut)
+      setTextOut(text)
+      setShowDetectedLanguage(false)
+    }
+    else if(language === "Detect Languages" && (languageDetected === "English" || languageDetected === "French" || languageDetected === "Spanish") && (outLanguage !== "French" && outLanguage !== "English" && outLanguage !== "Spanish")){
+      setOutLanguage(languageDetected)
+      setLanguageSelectInput(outLanguage)
+      setLanguage(outLanguage)
+      setLangpairIn(langPairOut)
+      setLangpairOut(langPairIn)
+      setText(textOut)
+      setTextOut(text)
+      setShowDetectedLanguage(false)
+    }
+    else if(language === "Detect Languages" && (languageDetected !== "English" && languageDetected !== "French" && languageDetected !== "Spanish") && (outLanguage === "French" || outLanguage === "English" || outLanguage === "Spanish")){
+      setLanguageSelect(languageDetected)
+      setOutLanguage(languageDetected)
+      setLanguage(outLanguage)
+      setLangpairIn(langPairOut)
+      setLangpairOut(langPairIn)
+      setText(textOut)
+      setTextOut(text)
+      setShowDetectedLanguage(false)
+    }
+    else if(language === "Detect Languages" && (languageDetected !== "English" && languageDetected !== "French" && languageDetected !== "Spanish") && (outLanguage !== "French" && outLanguage !== "English" && outLanguage !== "Spanish")){
+      setLanguageSelect(languageDetected)
+      setOutLanguage(languageDetected)
+      setLanguageSelectInput(outLanguage)
+      setLanguage(outLanguage)
+      setLangpairIn(langPairOut)
+      setLangpairOut(langPairIn)
+      setText(textOut)
+      setTextOut(text)
+      setShowDetectedLanguage(false)
+    }
+     else if ((outLanguage !== "French" && outLanguage !== "English" && outLanguage !== "Spanish") && (language !== "Spanish" && language !== "French" && language !== "English")) {
       setLanguageSelect(languageSelectInput)
       setLanguageSelectInput(languageSelect)
       setLanguage(outLanguage)
       setOutLanguage(language)
       setLangpairIn(langPairOut)
       setLangpairOut(langPairIn)
+      setText(textOut)
+      setTextOut(text)
     } else if ((outLanguage !== "French" && outLanguage !== "English" && outLanguage !== "Spanish") && (language === "Spanish" || language === "French" || language === "English")) {
       setLanguage(outLanguage)
       setLanguageSelectInput(outLanguage)
       setOutLanguage(language)
       setLangpairIn(langPairOut)
       setLangpairOut(langPairIn)
+      setText(textOut)
+      setTextOut(text)
     } else if ((outLanguage === "French" || outLanguage === "English" || outLanguage === "Spanish") && (language === "Spanish" || language === "French" || language === "English")) {
       setOutLanguage(language);
       setLanguage(outLanguage);
       setLangpairIn(langPairOut)
       setLangpairOut(langPairIn)
+      setText(textOut)
+      setTextOut(text)
     } else if ((outLanguage === "French" || outLanguage === "English" || outLanguage === "Spanish") && (language !== "Spanish" && language !== "French" && language !== "English")) {
       setLanguageSelect(language)
       setOutLanguage(language)
       setLanguage(outLanguage)
       setLangpairIn(langPairOut)
       setLangpairOut(langPairIn)
+      setText(textOut)
+      setTextOut(text)
     }
   }
 
@@ -121,10 +170,14 @@ const BoxContainer = () => {
         setLanguageSelectInput(language)
         setDisplayInput(false)
         setLangpairIn(key)
-      } else if (language === value) {
+      }
+       else if (language === value) {
         setLangpairIn(key)
         setLanguage(language)
         setDisplayInput(false)
+      }
+      else if(language !== "Detected Languages"){
+        setShowDetectedLanguage(false)
       }
     }
   }
@@ -154,8 +207,8 @@ const BoxContainer = () => {
         setDisplay={setDisplayInput}
         copyText={copyText}
         letsTalk={letsTalk}
-        languageDetected={languageDetected}
-        showDetectedLanguage={showDetectedLanguage}
+        languagedetected={languageDetected}
+        showdetectedlanguage={showDetectedLanguage}
       />
       <Output
         filterLanguageOut={filterLanguageOut}
