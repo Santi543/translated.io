@@ -19,7 +19,7 @@ const countries = {
     "dv-MV": "Maldivian",
     "el-GR": "Greek",
     "en-GB": "English",
-    "es": "Spanish",
+    "es-ES": "Spanish",
     "et-EE": "Estonian",
     "eu-ES": "Basque",
     "fa-IR": "Persian",
