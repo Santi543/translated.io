@@ -188,7 +188,7 @@ const Input = ({ text, setText, showdetectedlanguage, languagedetected, setLangu
       </BoxLanguages>
       <TextArea value={text} onChange={(evt) => onChangeText(evt)} disabled={false} minLength={0} maxLength={500}></TextArea>
       <BoxRowBottom>
-        
+
         <DetectedLanguage showdetectedlanguage={showdetectedlanguage} languagedetected={languagedetected}>Language: {languagedetected}</DetectedLanguage>
         <CharactersCounter>{counter}/500</CharactersCounter>
       </BoxRowBottom>
@@ -205,7 +205,7 @@ const Input = ({ text, setText, showdetectedlanguage, languagedetected, setLangu
           <img src={alfa} />Translate
         </Translate>
       </BoxRowBottom>
-      <ToastContainer position='bottom-right' delay={3000} />
+        <ToastContainer position='bottom-right' delay={3000} />
     </Container>
   )
 }
